@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -52,6 +53,8 @@ public class ExcelFileHandler {
 		this.fos = fos;
 		workbook = new XSSFWorkbook();
 		worksheet = workbook.createSheet("Identified companies");
+		XSSFFont wbFont=workbook.createFont();
+		wbFont.setCharSet(XSSFFont.ANSI_CHARSET);
 	}
 
 	public void WriteAndFlushWorkbook() throws IOException{

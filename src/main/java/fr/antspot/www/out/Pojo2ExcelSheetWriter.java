@@ -28,21 +28,48 @@ public class Pojo2ExcelSheetWriter {
 			// Création de la premiere ligne correspondant aux infos générales
 			// de la compagnie
 			Row row = mExcelFileHandler.getWorksheet().createRow(rowCount++);
+//			row.setRowStyle(CellStyle.);
 			row.createCell(cellCount++).setCellValue(ic.getCompanyName());
+			
 			row.createCell(cellCount++).setCellValue(ic.getCompanySize());
 			row.createCell(cellCount++).setCellValue(ic.getCompanyDomain());
 			row.createCell(cellCount++).setCellValue(
 					phoneNumbers != null && !phoneNumbers.isEmpty() ? phoneNumbers.get(0) : "");
 			if (lListContact != null && !lListContact.isEmpty()) {
-
-				cellCount = 1;
 				for (IdentifiedContact lIdentifiedContact : lListContact) {
+					cellCount = 1;
 					row = mExcelFileHandler.getWorksheet().createRow(rowCount++);
 					row.createCell(cellCount++).setCellValue(lIdentifiedContact.getLinkedInWebLink());
 					row.createCell(cellCount++).setCellValue(lIdentifiedContact.getLinkedInRole());
 					row.createCell(cellCount++).setCellValue(lIdentifiedContact.getLinkedInLocation());
 				}
 			}
+			maxCellCountReached = maxCellCountReached < cellCount ? cellCount : maxCellCountReached;
+		}
+		for (int i = 0; i < maxCellCountReached; i++) {
+			mExcelFileHandler.getWorksheet().autoSizeColumn(i);
+		}
+		try {
+			mExcelFileHandler.WriteAndFlushWorkbook();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void writeContact2Excel(List<IdentifiedContact> lListContactTotal) {
+		int rowCount = 0;
+		int maxCellCountReached = 0;
+		for (IdentifiedContact ic : lListContactTotal) {
+			int cellCount = 0;
+
+			Row row = mExcelFileHandler.getWorksheet().createRow(rowCount++);
+			row.createCell(cellCount++).setCellValue(ic.getPrenom());
+			row.createCell(cellCount++).setCellValue(ic.getNom());
+			row.createCell(cellCount++).setCellValue(ic.getEmail());
+			row.createCell(cellCount++).setCellValue(ic.getLinkedInWebLink());
+			row.createCell(cellCount++).setCellValue(ic.getLinkedInRole());
+			row.createCell(cellCount++).setCellValue(ic.getLinkedInLocation());
 			maxCellCountReached = maxCellCountReached < cellCount ? cellCount : maxCellCountReached;
 		}
 		for (int i = 0; i < maxCellCountReached; i++) {

@@ -1,4 +1,5 @@
 package fr.antspot.www.util;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,7 +25,7 @@ public class ExcelReaderService {
 		while (rowIt.hasNext()) {
 			Row lRow = rowIt.next();
 			Iterator<Cell> cellIt = lRow.cellIterator();
-			Map<Integer,ExcelCriteria> lMapSortedCriteria = new TreeMap<Integer,ExcelCriteria>();
+			Map<Integer, ExcelCriteria> lMapSortedCriteria = new TreeMap<Integer, ExcelCriteria>();
 			if (++rowCount == 1) {
 				// This is the first line of the sheet, where columns headers
 				// should be.
@@ -46,7 +47,17 @@ public class ExcelReaderService {
 					Cell lCell = cellIt.next();
 					try {
 						excelResult.setRowNumber(rowCount);
-						excelResult.addCellValue(lCell.getColumnIndex(), lCell.getStringCellValue());
+
+						try {
+							excelResult.addCellValue(lCell.getColumnIndex(), lCell.getStringCellValue());
+						} catch (IllegalStateException e) {
+							try {
+								excelResult.addCellValue(lCell.getColumnIndex(),
+										String.valueOf(lCell.getNumericCellValue()));
+							} catch (IllegalStateException e1) {
+//								System.out.println("ignore error");
+							}
+						}
 						ExcelCriteria criteria = lMapSortedCriteria.get(lCell.getColumnIndex());
 						if (criteria != null) {
 							if (!lCell.getStringCellValue().equals(criteria.getCriteriaValue())) {
